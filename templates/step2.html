@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block main %}
+<h3>Uzupełnij informacje</h3>
+<form action="/step2/" enctype="multipart/form-data" method="post">{% csrf_token %}
+    <input type="text" name="id" value="{{id}}"/>
+    <input type="text" name="title"/>
+    <input type="submit" value="Submit" />
+</form>
+{% endblock %}

@@ -1,0 +1,160 @@
+django-admin.py startproject [nazwa]
+python manage.py startapp [nazwa]
+python manage.py runserver
+
+settings.py:
+DATABASES = {
+	'ENGINE': 'django.db.backends.sqlite3',
+	
+	}
+
+urls.py:
+	from django.contrib import admin
+	admin.autodiscover()
+
+	urlpatterns = patterns('',
+		url(r'^admin/', include(admin.site.urls)),
+	)
+
+
+python manage.py syncdb - sluzy do synchronizacji struktury BD z modelami
+
+
+models.py:
+class Category(models.Model):
+	name = models.CharField(max_length=255, verbose_name='Nazwa kategorii')
+	slug = models.SlugField(max_length=255, unique=True, verbose_name='Odnosnik')
+	icon = models.ImageField(upload_to='icons', verbose_name='Ikonka kategorii', blank=True)
+	class Meta:
+		verbose_name = "Kategoria"
+		verbose_name_plural = "Kategorie"
+	def __str__(self):
+		return self.name
+	def __unicode__(self):
+		return self.name
+		
+class News(models.Model):
+	category = models.ManyToManyField(Category, verbose_name='Kategorie')
+	title = models.CharField(max_length=255, verbose_name='Tytul')
+	slug = models.SlugField(max_length=255, unique=True, verbose_name='Odnosnik')
+	text = models.TextField(verbose_name='Tresc')
+	date = models.DateTimeField(verbose_name='Data dodania')
+	wykop = models.CharField(max_length=255, verbose_name='Wykop', blank=True)
+	class Meta:
+		verbose_name = 'Wiadomosc'
+		verbose_name_plural = 'Wiadomosci'
+	def __str__(self):
+		return self.title
+	def __unicode__(self):
+		return self.title
+	def get_absolute_url(self):
+		return '/news/' + self.slug + '/'
+
+Python Imaging Library (PIL)
+
+
+Aby model byl widoczny w Paneli Admina nalezy zarejestrowac go w admin.py w katalogu z modelem
+
+admin.py:
+from django.contrib import admin
+# import pliku z modelami
+from news.models import *
+
+# rejestruj model podajac jego nazwe
+admin.site.register(Category)
+admin.site.register(News)
+
+urls.py:
+from django.conf.urls import patterns, include, url
+
+from django.contrib import admin
+admin.autodiscover()
+
+urlpatterns = patterns('',
+    url(r'^polls/$', 'polls.views.index'),
+    url(r'^polls/(?P<poll_id>\d+)/$', 'polls.views.detail'),
+    url(r'^polls/(?P<poll_id>\d+)/results/$', 'polls.views.results'),
+    url(r'^polls/(?P<poll_id>\d+)/vote/$', 'polls.views.vote'),
+    url(r'^admin/', include(admin.site.urls)),
+)
+
+
+views.py:
+from django.http import HttpResponse
+
+def index(request):
+    return HttpResponse("Hello, world. You're at the poll index.")
+
+def detail(request, poll_id):
+    return HttpResponse("You're looking at poll %s." % poll_id)
+
+def results(request, poll_id):
+    return HttpResponse("You're looking at the results of poll %s." % poll_id)
+
+def vote(request, poll_id):
+    return HttpResponse("You're voting on poll %s." % poll_id)
+
+def index(request):
+    latest_poll_list = Poll.objects.all().order_by('-pub_date')[:5]
+    return render_to_response('polls/index.html', {'latest_poll_list': latest_poll_list})
+
+
+def index(request):
+    b = News();
+    b.text = "dodany recznie"
+    b.date = datetime.date.today()
+    b.slug = "recznie"
+    b.save()
+    news = News.objects.all()
+    return render_to_response('news/index.html', {'news':news}, context_instance=RequestContext(request))
+	#return HttpResponse('<h1>Page was found</h1>')
+
+index.html:
+{% for n in news %}
+        <h3>Wyswietl artukul</h3>
+        <h3>{{ n.title }}</h3>
+        <h3>{{ n.text }}</h3>
+        <h3>{{ n.date }}</h3>
+{% endfor %}
+
+
+base.html:
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>siema</title>
+</head>
+<body>
+<H1>To jest strona glowna !!!!!!</H1>
+    <div id="main">
+        {% block main %}
+		tutaj zostanie umieszcona podstrona
+		....
+		....
+        {% endblock %}
+    </div>
+</body>
+</html>
+
+index.html:
+{% extends "news/base.html" %}
+{% block main %}
+	tresc strony
+	.....
+	.....
+{% endblock %}
+
+
+dodanie plikow statycznych:
+urls.py:
+	url(r'^site_media/(.*)$', 'django.views.static.serve', 
+	{'document_root':os.path.join(os.path.dirname(__file__), 'site_media')}),
+
+/projekt/blog/blog/site_media/
+
+settings.py:
+	STATIC_URL = "http://127.0.0.1:8000/site_media"
+
+index.html
+	<img src="{{ STATIC_URL }}image.jpg" alt="Smiley face" height="42" width="42" />

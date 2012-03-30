@@ -16,7 +16,9 @@ urlpatterns = patterns('',
     url(r'^site_media/(.*)$', 'django.views.static.serve', {'document_root':os.path.join(os.path.dirname(__file__), 'site_media')}),
 
     url(r'^index/', 'presentations.views.index'),
-    url(r'^login', 'presentations.views.login'),
+    url(r'^login/', 'presentations.views.login'),
+    url(r'^step1', 'presentations.views.step1'),
+    url(r'^step2', 'presentations.views.step2'),
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 )
