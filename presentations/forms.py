@@ -15,7 +15,15 @@ class PresentationForm(forms.ModelForm):
     # video = forms.Field(widget=forms.FileInput, required=False)
     #pdf_file = forms.FileField()
 
-class PdfForm(forms.ModelForm):
-    class Meta:
-        model = Presentation
-        fields = ('pdf_file',)
+#class UploadPdfForm(forms.ModelForm):
+#    class Meta:
+#        model = Presentation
+#        fields = ('pdf_file',)
+
+
+class UploadPdfForm(forms.Form):
+    title = forms.CharField(max_length=255)
+    description = forms.CharField(max_length=255)
+    pdf_file = forms.FileField()
+
+#class PresentationForm(forms.Form)
