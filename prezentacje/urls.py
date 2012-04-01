@@ -17,8 +17,9 @@ urlpatterns = patterns('',
 
     url(r'^index/', 'presentations.views.index'),
     url(r'^login/', 'presentations.views.login'),
-    url(r'^step1', 'presentations.views.step1'),
-    url(r'^step2', 'presentations.views.step2'),
+    url(r'^new/', 'presentations.views.new'),
+    url(r'^new_slides/', 'presentations.views.new_slides'),
+
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 )

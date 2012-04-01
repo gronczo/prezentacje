@@ -1,8 +1,13 @@
 from django.template import *
 from django.shortcuts import *
-from presentations.forms import *
 
-# Create your views here.
+from presentations.models import *
+from presentations.forms import *
+from presentations.helpers import *
+
+PDF_DIR = 'pdf_files/'
+MOVIE_DIR = 'movie_files/'
+SLIDE_DIR = 'slide_files/'
 
 def index(request):
     return render_to_response('index.html', context_instance=RequestContext(request))
@@ -10,36 +15,44 @@ def index(request):
 def login(request):
     return render_to_response('login.html', context_instance=RequestContext(request))
 
-def step1(request): # wyswietl formularz z doaniem pliku pdf
-    if request.method == "GET": # wyswietl formularz
-        return render_to_response('step1.html', context_instance=RequestContext(request))
-    elif(request.method == "POST" and 'pdf_file' in request.FILES): # otrzymanie danych z formularz
-        f = request.FILES['pdf_file']
-        p = Presentation()
-        p.pdf_file = f
-        p.user_id = 1
-        p.category_id = 1
-        p.save()
+def new(request):
+    if request.method == "GET": # wyswietl formularz z doaniem pliku pdf
+        upload_presentation_form = UploadPresentationForm()
+        return render_to_response('new.html', {'upload_presentation_form': upload_presentation_form}, context_instance=RequestContext(request))
 
-        # przetworzenie pliku pdf
+    if(request.method == "POST"):
+        # upload_presentation_form = UploadPresentationForm(request.POST, request.FILES)
 
-        return HttpResponseRedirect('../step2.html?id=' + str(p.id) ) # przekieruj i przekaz id prezentacji do kolejnego formularza
-    else:
-        return  HttpResponse()
-
-def step2(request): # wyswietl formularz ze slajdami
-    if request.method == 'POST':
-        id = request.POST['id']
         title = request.POST['title']
+        description = request.POST['description']
+        pdf_file = request.FILES['pdf_file']
+        movie_file = request.FILES['movie_file']
 
-        p = Presentation.objects.get(pk=id)
+        pdf_path = save_on_server(pdf_file, PDF_DIR)
+        movie_path = save_on_server(movie_file, MOVIE_DIR)
 
-
+        p = Presentation()
+        p.title = title
+        p.description = description
+        p.pdf_file = pdf_path
+        p.movie_file = movie_path
         p.save()
 
-        return HttpResponse(str(p.pdf_file))
-    else:
-        id = request.GET['id']
-        return render_to_response('step2.html', {'id':id}, context_instance=RequestContext(request))
+        slide_list = convert(pdf_path, p.id, SLIDE_DIR)
+
+        collect_static()
+
+        return render_to_response('new_slides.html', {'slide_list': slide_list}, context_instance=RequestContext(request))
+
+    return HttpResponse()
+
+def new_slides(request):
+    #if request.method == "GET":
 
 
+    #if request.metod == "POST":
+
+
+
+
+    return HttpResponse("Dodawanie slajdow")

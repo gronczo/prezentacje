@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block main %}
+
+<form action="/new_slides/" enctype="multipart/form-data" method="post">{% csrf_token %}
+    <h3>uzupełnij ponieższe informacje:</h3>
+    <table>
+        {% load static from staticfiles %}
+        {% for element in slide_list %}
+            <tr>
+                <td><label style="vertical-align: middle;">Slajd nr {{ element }}</label></div><img src='{% static element %}' alt='{% static element %}' width="200" height="300"></td>
+                <td><label>Czas wystąpienia: </label> <input type="text" name='{{ element }}' value='{{ element }}'/></td>
+            </tr>
+        {% endfor %}
+        <tr><td><input type="submit" value="Wyslij" /></tr></td>
+    </table>
+</form>
+
+{% endblock %}

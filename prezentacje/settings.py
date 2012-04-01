@@ -48,25 +48,28 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = "C:/Projects/django/prezentacje/prezentacje/media/"
+MEDIA_ROOT = "/home/adam/projects/django/prezentacje/prezentacje/media/"
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = "/media/"
+MEDIA_URL = "http://127.0.0.1:8000/media/"
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = ""
+STATIC_ROOT = "/home/adam/projects/django/prezentacje/prezentacje/site_media/"
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = "/site_media/"
+STATIC_URL = "http://127.0.0.1:8000/site_media/"
 
 # Additional locations of static files
 STATICFILES_DIRS = (
+    "/home/adam/projects/django/prezentacje/slide_files/",
+    "/home/adam/projects/django/prezentacje/movie_files/",
+    "/home/adam/projects/django/prezentacje/pdf_files/",
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -109,7 +112,8 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    "C:/Projects/django/prezentacje/templates"
+    "/home/adam/projects/django/prezentacje/templates"
+
 )
 
 INSTALLED_APPS = (
