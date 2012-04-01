@@ -4,10 +4,6 @@
 
 <form action="/step1/" enctype="multipart/form-data" method="post">{% csrf_token %}
     <table>
-        {{ upload_pdf_form }}
-        <input type="submit" value="Wyślij"/>
-    </table>
-<!--<table>
         <tr>
             <td><label>Pdf</label> <input type="file" name="pdf_file"/></td>
         </tr>
@@ -15,6 +11,6 @@
             <td><input type="submit" value="Wyślij"/></td>
         </tr>
     </table>
-</form>-->
+</form>
 
 {% endblock %}
