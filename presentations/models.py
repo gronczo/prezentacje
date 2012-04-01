@@ -16,10 +16,10 @@ class Presentation(models.Model):
     class Meta:
         verbose_name = "Prezentacja"
 
-class Slides(models.Model):
+class Slide(models.Model):
     presentation = models.ForeignKey(Presentation) # id prezentacji
     slide_file = models.CharField(max_length=255) # adres do pliku png
-    time = models.TimeField() # czas wystapienia
+    time = models.TimeField(default="00:00") # czas wystapienia
     class Meta:
         verbose_name = "Slajd"
 

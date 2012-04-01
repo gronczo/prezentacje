@@ -40,19 +40,51 @@ def new(request):
 
         slide_list = convert(pdf_path, p.id, SLIDE_DIR)
 
+        for element in slide_list:
+            slide = Slide()
+            slide.presentation = p
+            slide.slide_file = element
+            slide.save()
+
         collect_static()
 
-        return render_to_response('new_slides.html', {'slide_list': slide_list}, context_instance=RequestContext(request))
+        return render_to_response('new_slides.html', {'slide_list': slide_list, 'presentation_id': p.id}, context_instance=RequestContext(request))
 
     return HttpResponse()
 
 def new_slides(request):
-    #if request.method == "GET":
+    if request.method == "POST":
+        presentation_id = request.POST["presentation_id"]
+        print "-- views -- new_slides() -- id prezentacji: " + presentation_id
 
+        p = Presentation.objects.filter(id = presentation_id)
 
-    #if request.metod == "POST":
+        slides = Slide.objects.filter(presentation = p)
 
+        for slide in slides:
+            time = request.POST[str(slide.slide_file)]
+            slide.time = time
+            slide.save()
 
+    return HttpResponse()
 
+def play(request, id):
+    if request.method == "GET":
+        presentation_id = id
 
-    return HttpResponse("Dodawanie slajdow")
+        p = Presentation.objects.filter(id = presentation_id)
+
+    return HttpResponse("Odwarzanie prezentacji o id:  " + presentation_id)
+
+def show(request, id):
+    if request.method == "GET":
+        presentation_id = id
+        p_list = Presentation.objects.filter(id = presentation_id)
+
+        if p_list.count() > 0:
+            p = p_list[0]
+            return render_to_response('show.html', {'title': p.title, 'description': p.description, 'pdf_file': p.pdf_file, 'movie_file': p.movie_file}, context_instance=RequestContext(request))
+
+        return HttpResponse("Brak prezentacji o podanym id.")
+
+    return HttpResponse()
